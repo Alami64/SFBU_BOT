@@ -1,3 +1,7 @@
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+
 import streamlit as st
 from langchain.memory import ConversationBufferMemory
 from dataprocess import return_answer, load_default_resources, default_resources, generate_email_format_answer, check_response_before_answer, translate_to_selected_response_language
