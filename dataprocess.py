@@ -17,7 +17,7 @@ import openai
 from dotenv import load_dotenv, find_dotenv
 from langchain.prompts import ChatPromptTemplate
 from resources_config import default_resources
-
+import streamlit as st
 _ = load_dotenv(find_dotenv())  # read local .env file
 openai.api_key = os.environ['OPENAI_API_KEY']
 

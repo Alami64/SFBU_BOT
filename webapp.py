@@ -42,11 +42,12 @@ with cent_co:
 
 
 ###### Define Default State Variable #####################
-
+@st.cache_resource
+def load_resources():
+    return load_default_resources(load_from_local_stored_files=True)
 # Load default resources
 if 'default_vectorstore' not in st.session_state:
-    st.session_state.default_vectorstore = load_default_resources(
-        load_from_local_stored_files=True)
+    st.session_state.default_vectorstore = load_resources()
 
 # Initialise default retriver variable
 if 'retriever' not in st.session_state:
@@ -78,11 +79,12 @@ if 'model' not in st.session_state:
 if 'temperature' not in st.session_state:
     st.session_state.temperature = 0.0
 
-if 'audio_recorder_key' not in st.session_state:
-    st.session_state.audio_recorder_key = "1"
+@st.cache_resource
+def load_whisper_model():
+    return whisper.load_model("base")
 
 if 'whisper_model' not in st.session_state:
-    st.session_state.whisper_model = whisper.load_model("base")
+    st.session_state.whisper_model = load_whisper_model()
 
 
 # Initialise default response language variable
