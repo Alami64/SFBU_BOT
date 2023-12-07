@@ -25,12 +25,12 @@ os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
 openai.api_key = os.environ['OPENAI_API_KEY']
 
-openai_models = ["gpt-3.5-turbo-1106", "gpt-4-1106-preview",
-                 "ft:gpt-3.5-turbo-1106:sfbu-customer-service::8SUygbDc"]
+openai_models = ["gpt-3.5-turbo-1106", "gpt-4-1106-preview"]
 client = openai.OpenAI(
     # This is the default and can be omitted
     api_key=openai.api_key,
 )
+
 default_max_tokens = 500
 
 ###### Header UI Start ###################################
@@ -42,6 +42,7 @@ with cent_co:
 
 
 ###### Define Default State Variable #####################
+
 @st.cache_resource
 def load_resources():
     return load_default_resources(load_from_local_stored_files=True)
@@ -79,6 +80,9 @@ if 'model' not in st.session_state:
 if 'temperature' not in st.session_state:
     st.session_state.temperature = 0.0
 
+if 'audio_recorder_key' not in st.session_state:
+    st.session_state.audio_recorder_key = "1"
+
 @st.cache_resource
 def load_whisper_model():
     return whisper.load_model("base")
@@ -111,10 +115,17 @@ with st.sidebar:
     # Add a label to avoid the warning and use label_visibility="collapsed" to hide the label
     model = st.selectbox('Select your model',
                          openai_models, index=openai_models.index(st.session_state.model), label_visibility="collapsed")
+    with st.container():
+        st.markdown(
+            """<div>
+                <div><small>GPT-3.5 : Less powerful, Faster response</small></div>
+                <div><small>GPT-4.0 : More powerful, Slower response</small></div>
+                </div>
+            """, unsafe_allow_html=True)
 
     # set selected value back to session state
     st.session_state.model = model
-    # print(f"st.session_state.model: {st.session_state.model}")
+    print(f"st.session_state.model: {st.session_state.model}")
 
     st.divider()
     # Check session state first
@@ -124,6 +135,14 @@ with st.sidebar:
     temperature = st.slider('Select your Temperature', min_value=0.0,
                             max_value=2.0, step=0.01, value=st.session_state.temperature, label_visibility="collapsed")
 
+    with st.container():
+        st.markdown(
+            """<div>
+                <div><small>Lower temperature : more deterministic results, higher accuracy</small></div>
+                <div><small>Higher temperature : more creative results, lower accuracy</small></div>
+                </div>
+            """, unsafe_allow_html=True)
+
     # # set selected value back to session state
     # st.session_state.temperature = temperature
     # # print(f"st.session_state.temperature: {st.session_state.temperature}")
@@ -132,8 +151,12 @@ with st.sidebar:
     st.write('Choose Response Language')
     response_language = st.selectbox('Select your response language',
                                      response_languages, index=0, label_visibility="collapsed")
-    st.caption(
-        'By default, the response language is the same as the input language.')
+    with st.container():
+        st.markdown(
+            """<div>
+                <div><small>By default, the response language is the same as the input language.</small></div>
+                </div>
+            """, unsafe_allow_html=True)
 
     # set selected value back to session state
     st.session_state.response_language = response_language
@@ -160,7 +183,6 @@ def result_all_button_state():
 
 def clear_chat_history():
     st.session_state.messages = []
-
 
 
 def generate_audio(input):
@@ -257,7 +279,7 @@ if st.session_state.question_submit_clicked or st.session_state.answer_in_email_
 
         if st.session_state.response_language != "Default":
             final_response = translate_to_selected_response_language(client,
-                                                                    final_response, st.session_state.response_language, model, temperature)
+                                                                     final_response, st.session_state.response_language, model, temperature)
 
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
