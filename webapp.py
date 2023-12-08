@@ -189,6 +189,8 @@ def result_all_button_state():
 
 def clear_chat_history():
     st.session_state.messages = []
+    st.session_state.memory = ConversationBufferMemory(
+        memory_key="chat_history", max_len=20, return_messages=True)
 
 
 def generate_audio(input):
