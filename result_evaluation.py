@@ -15,14 +15,14 @@ def get_positve_test_eval_messages(query, ideal_answer, actual_answer):
 
     system_message = """You are an evaluation judge tasked with determining the correctness of an answer. \
     Please return a score of 0 or 1 and a short reason for your evaluation score.
-    Please assign a score of 1 if the actual answer is sementically correct compared to the ideal answer; otherwise, assign a score of 0. \
+    Please assign a score of 1 if the actual answer is semantically correct compared to the ideal answer; otherwise, assign a score of 0. \
     Both the score and reason cannot be empty \
     Answer format will be {score} ### {reason}"""
 
     user_message = f"""Prompt: {query} \
     Ideal answer: {ideal_answer} \
     Actual answer: {actual_answer} \
-    Please give a score of 1 if the actual answer is sementically correct compared to the ideal answer; otherwise, assign a score of 0.
+    Please give a score of 1 if the actual answer is semantically correct compared to the ideal answer; otherwise, assign a score of 0.
     """
 
     assisgnment_message = f"""Please return the score and use ### to separate the score and the reason. \
@@ -39,15 +39,15 @@ def get_positve_test_eval_messages(query, ideal_answer, actual_answer):
 def get_negative_test_eval_messages(query, ideal_answer, actual_answer):
 
     system_message = """You are an evaluation judge tasked with determining the correctness of an answer in negative scenarios. \
-    Assign a score of 1 if the actual answer is sementically correct compared to the ideal answer. \
-    Assign a score of 0.5 if the actual answer decline to help or say idk when the ideal answer addresses the negative initiative. \
+    Assign a score of 1 if the actual answer is semantically correct compared to the ideal answer. \
+    Assign a score of 1 if the actual answer decline to help or say idk when the ideal answer addresses the negative initiative. \
     Otherwise, assign a score of 0."""
 
     user_message = f"""Prompt: {query} \
     Ideal answer: {ideal_answer} \
     Actual answer: {actual_answer} \
-    Please give a score of 1 if the actual answer is sementically correct compared to the ideal answer. \
-    Assign a score of 0.5 if the actual answer decline to help or say idk when the ideal answer addresses the negative initiative. \
+    Please give a score of 1 if the actual answer is semantically correct compared to the ideal answer. \
+    Assign a score of 1 if the actual answer decline to help or say idk when the ideal answer addresses the negative initiative. \
     Otherwise, assign a score of 0.
     """
 

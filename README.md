@@ -43,10 +43,17 @@ To set up the ChatGPT PDF Assistant, follow these steps:
 git clone https://github.com/your-username/your-repo-name.git
 ```
 
-2. Navigate to the project directory:
+2. Navigate to the project directory and prepare for local testing:
 
 ```
-cd cs589_week6_hw3
+cd GenAI-SFBU-ServiceBot-Streamlit
+
+code requirements.txt
+Comment out pysqlite3-binary line (this is needed for the connected deployment process but not suitable for local test)
+
+cd ..
+code webapp.py
+Comment out the line 6-8 (this is needed for the connected deployment process but not suitable for local test, but please make it available and remain the format when commit to the repo)
 ```
 
 3. Install the required Python packages:
@@ -61,7 +68,7 @@ pip install -r requirements.txt
 put you api key in .env file with variable name OPENAI_API_KEY
 ```
 
-##Running the Application
+## Running the Application
 
 To run the web application locally, execute the following command:
 

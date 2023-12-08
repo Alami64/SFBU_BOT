@@ -17,7 +17,7 @@ import openai
 from dotenv import load_dotenv, find_dotenv
 from langchain.prompts import ChatPromptTemplate
 from resources_config import default_resources
-import streamlit as st
+
 _ = load_dotenv(find_dotenv())  # read local .env file
 openai.api_key = os.environ['OPENAI_API_KEY']
 
@@ -60,7 +60,7 @@ common_refer_to_human_str = """
 """
 
 
-def load_default_resources(load_from_local_stored_files=False):
+def load_default_resources(load_from_local_stored_files=True):
 
     embedding = OpenAIEmbeddings()
     print("Start load_default_resources...")
@@ -88,6 +88,7 @@ def load_default_resources(load_from_local_stored_files=False):
         web_loader = WebBaseLoader(default_resources["url"])
 
         all_loaders = []
+
         all_loaders.extend(pdf_loaders)
         all_loaders.append(youtube_loader)
         all_loaders.append(web_loader)
@@ -246,4 +247,3 @@ def check_response_before_answer(client, user_input, answer, model="gpt-3.5-turb
         return "Sorry, I don't know. Please change your input and try again."
 
     return answer
-    

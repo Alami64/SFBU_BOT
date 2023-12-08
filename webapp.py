@@ -1,6 +1,13 @@
+#### Please keep this in order at the top ####
+# If you are running it locally, you can comment this out # 
+# This is for the streamlit deployment #
+#
+# Use save without formatting if it's being automatically changed by formatting tool #
 __import__('pysqlite3')
 import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+#
+##############################################
 
 import streamlit as st
 from langchain.memory import ConversationBufferMemory
@@ -12,25 +19,24 @@ from audio_recorder_streamlit import audio_recorder
 from tempfile import NamedTemporaryFile
 import whisper
 import time
+
+
+
 _ = load_dotenv(find_dotenv())  # read local .env file
 
 
-
-st.set_page_config(page_title = "SFBU BOT",
-                   page_icon= "./images/logo_bot.svg",
+st.set_page_config(page_title="SFBU BOT",
+                   page_icon="./images/logo_bot.svg",
                    initial_sidebar_state="auto",
-                    )
-
-os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+                   )
 
 openai.api_key = os.environ['OPENAI_API_KEY']
+openai_models = ['gpt-3.5-turbo-1106', 'gpt-4-1106-preview']
 
-openai_models = ["gpt-3.5-turbo-1106", "gpt-4-1106-preview"]
 client = openai.OpenAI(
     # This is the default and can be omitted
     api_key=openai.api_key,
 )
-
 default_max_tokens = 500
 
 ###### Header UI Start ###################################
@@ -125,7 +131,7 @@ with st.sidebar:
 
     # set selected value back to session state
     st.session_state.model = model
-    print(f"st.session_state.model: {st.session_state.model}")
+    # print(f"st.session_state.model: {st.session_state.model}")
 
     st.divider()
     # Check session state first
@@ -272,8 +278,10 @@ if st.session_state.question_submit_clicked or st.session_state.answer_in_email_
             print("check_response_before_answer, final result --> : ", final_response)
 
         elif st.session_state.answer_in_email_format_clicked:
+            temp_messages = st.session_state.messages.copy()
+            temp_messages.append({"role": "assistant", "content": first_result})
             final_response = generate_email_format_answer(
-                client, first_result, model, temperature)
+                client, temp_messages, model, temperature)
 
             print("generate_email_format_answer, final result --> : ", final_response)
 
@@ -303,9 +311,6 @@ if st.session_state.question_submit_clicked or st.session_state.answer_in_email_
     # Add assistant message to chat history
     st.session_state.messages.append(
         {"role": "assistant", "content": final_response})
-
-    st.session_state.memory.save_context(
-        {"question": query}, {"answer": final_response})
 
     # Reset the button state to wait for the next question
     result_all_button_state()
